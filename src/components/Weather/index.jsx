@@ -59,7 +59,15 @@ const WeatherForm = ({ onSubmit }) => {
           },
         })}
       />
-      {errors.city && <p role="alert">{errors.city.message}</p>}
+      {errors.city && (
+        <p
+          className={styles.error}
+          style={{ backgroundColor: 'transparent', color: 'red', marginTop: 0 }}
+          role="alert"
+        >
+          {errors.city.message}
+        </p>
+      )}
       <input className={styles.Button} type="submit" value="Get Weather" />
     </form>
   );
@@ -82,6 +90,7 @@ const Weather = () => {
         temp: data.main.temp,
         icon: data.weather[0].icon,
       });
+      apiError && setApiError(false);
     } catch {
       setApiError(true);
     }
@@ -95,7 +104,7 @@ const Weather = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '100vw',
+        width: '100%',
       }}
     >
       <h2 style={{ marginBottom: '2rem' }}>How's the weather out there?</h2>
@@ -107,7 +116,9 @@ const Weather = () => {
         />
       )}
       <WeatherForm onSubmit={onSubmit} />
-      {apiError && <p>Sorry, the city could not be found.</p>}
+      {apiError && (
+        <p className={styles.error}>Sorry, the city could not be found.</p>
+      )}
     </div>
   );
 };

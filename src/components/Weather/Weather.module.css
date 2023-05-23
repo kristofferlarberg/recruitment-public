@@ -39,3 +39,11 @@
   white-space: nowrap;
   border-width: 0;
 }
+
+.error {
+  padding: 0.5rem 1rem;
+  background: coral;
+  font-size: small;
+  color: black;
+  border-radius: 20px;
+}
