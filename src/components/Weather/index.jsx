@@ -11,6 +11,13 @@ import styles from './Weather.module.css';
 // 6. add icon x
 // 7. adjust styling x
 
+// possible future todos
+// 1. setup combobox for search suggestions
+// (makes it possible to pick the correct city, if there are multiple with the same name)
+// 2. add i18n or l10n
+// 3. add country alongside city name in result
+// 4. add tailwind to replace at least inline styles
+
 const WeatherInfo = ({ city, icon, temp }) => (
   <div
     style={{
