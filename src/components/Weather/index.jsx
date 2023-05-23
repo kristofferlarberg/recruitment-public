@@ -3,17 +3,18 @@ import { useForm } from 'react-hook-form';
 import styles from './Weather.module.css';
 
 // todo
-// 1. setup fetch from API
-// 2. save data to state and render in UI
-// 3. setup form
-// 4. make fetch from API with form input
-// 5. validate input
+// 1. setup fetch from API x
+// 2. save data to state and render in UI x
+// 3. setup form x
+// 4. make fetch from API with form input x
+// 5. validate input x
 // 6. add contitional copy based on weather
 // 7. add icon and styling
 
 const Weather = () => {
   const [weather, setWeather] = useState('');
   const [city, setCity] = useState('');
+  const [apiError, setApiError] = useState(false);
   const {
     register,
     handleSubmit,
@@ -32,16 +33,14 @@ const Weather = () => {
           const data = await response.json();
           setWeather(data.weather[0].main);
         } catch {
-          console.log('Data not found');
+          setApiError(true);
         }
       }
     };
     weatherData();
   }, [city]);
-
+  console.log(errors);
   const onSubmit = (input) => setCity(input.city);
-
-  console.log('errors', errors);
 
   return (
     <div>
@@ -53,12 +52,26 @@ const Weather = () => {
         </p>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
+        <label htmlFor="city" className={styles.srOnly}>
+          City
+        </label>
         <input
           className={styles.textInput}
           type="text"
           placeholder="Enter City"
-          {...register('city', { required: true, maxLength: 50 })}
+          aria-invalid={errors.city ? 'true' : 'false'}
+          {...register('city', {
+            required:
+              'Input the city name of where you want to see the current weather.',
+            maxLength: { value: 50, message: 'Max 50 characters.' },
+            pattern: {
+              value: /^[A-Öa-ö ]+$/i,
+              message: 'Only latin letters are accepted.',
+            },
+          })}
         />
+        {errors.city && <p role="alert">{errors.city.message}</p>}
+        {apiError && <p>Sorry, the city could not be found.</p>}
         <input className={styles.Button} type="submit" value="Get Weather" />
       </form>
     </div>
