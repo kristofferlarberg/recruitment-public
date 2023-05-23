@@ -8,8 +8,8 @@ import styles from './Weather.module.css';
 // 3. setup form x
 // 4. make fetch from API with form input x
 // 5. validate input x
-// 6. add contitional copy based on weather
-// 7. add icon and styling
+// 6. add icon x
+// 7. adjust styling
 
 const Weather = () => {
   const [weather, setWeather] = useState('');
@@ -31,7 +31,11 @@ const Weather = () => {
             `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${token}&units=metric`
           );
           const data = await response.json();
-          setWeather(data.weather[0].main);
+          setWeather({
+            city: data.name,
+            temp: data.main.temp,
+            icon: data.weather[0].icon,
+          });
         } catch {
           setApiError(true);
         }
@@ -39,17 +43,21 @@ const Weather = () => {
     };
     weatherData();
   }, [city]);
-  console.log(errors);
+
   const onSubmit = (input) => setCity(input.city);
 
   return (
     <div>
       <h2>How's the weather out there?</h2>
       {weather && (
-        <p>
-          The weather in {city[0].toUpperCase() + city.slice(1)} is{' '}
-          {weather.toLowerCase()}
-        </p>
+        <>
+          <h3>{weather.city}</h3>
+          <img
+            src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+            style={{ width: '50px' }}
+          />
+          <p>{weather.temp} °C</p>
+        </>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="city" className={styles.srOnly}>
