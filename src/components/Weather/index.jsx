@@ -11,14 +11,63 @@ import styles from './Weather.module.css';
 // 6. add icon x
 // 7. adjust styling x
 
-const Weather = () => {
-  const [weather, setWeather] = useState('');
-  const [apiError, setApiError] = useState(false);
+const WeatherInfo = ({ city, icon, temp }) => (
+  <div
+    style={{
+      backgroundColor: 'darkcyan',
+      marginTop: '1rem',
+      marginBottom: '1rem',
+      padding: '1rem 1rem 1.5rem',
+      borderRadius: '20px',
+      maxWidth: '20rem',
+      minWidth: '15rem',
+    }}
+  >
+    <h3 style={{ margin: '0 0 0.5rem 0', color: 'white' }}>{city}</h3>
+    <img
+      src={`https://openweathermap.org/img/wn/${icon}@2x.png`}
+      style={{ width: '50px' }}
+    />
+    <p style={{ color: 'white', margin: '0' }}>{temp} °C</p>
+  </div>
+);
+
+const WeatherForm = ({ onSubmit }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: '1.5rem' }}>
+      <label htmlFor="city" className={styles.srOnly}>
+        City
+      </label>
+      <input
+        className={styles.textInput}
+        type="text"
+        placeholder="Enter City"
+        aria-invalid={errors.city ? 'true' : 'false'}
+        {...register('city', {
+          required:
+            'Input the city name of where you want to see the current weather.',
+          maxLength: { value: 50, message: 'Max 50 characters.' },
+          pattern: {
+            value: /^[A-Öa-ö ]+$/i,
+            message: 'Only latin letters are accepted.',
+          },
+        })}
+      />
+      {errors.city && <p role="alert">{errors.city.message}</p>}
+      <input className={styles.Button} type="submit" value="Get Weather" />
+    </form>
+  );
+};
+
+const Weather = () => {
+  const [weather, setWeather] = useState('');
+  const [apiError, setApiError] = useState(false);
 
   const token = import.meta.env.VITE_API_TOKEN;
 
@@ -51,50 +100,14 @@ const Weather = () => {
     >
       <h2 style={{ marginBottom: '2rem' }}>How's the weather out there?</h2>
       {weather && (
-        <div
-          style={{
-            backgroundColor: 'darkcyan',
-            marginTop: '1rem',
-            marginBottom: '1rem',
-            padding: '1rem 1rem 1.5rem',
-            borderRadius: '20px',
-            maxWidth: '20rem',
-            minWidth: '15rem',
-          }}
-        >
-          <h3 style={{ margin: '0 0 0.5rem 0', color: 'white' }}>
-            {weather.city}
-          </h3>
-          <img
-            src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
-            style={{ width: '50px' }}
-          />
-          <p style={{ color: 'white', margin: '0' }}>{weather.temp} °C</p>
-        </div>
-      )}
-      <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: '1.5rem' }}>
-        <label htmlFor="city" className={styles.srOnly}>
-          City
-        </label>
-        <input
-          className={styles.textInput}
-          type="text"
-          placeholder="Enter City"
-          aria-invalid={errors.city ? 'true' : 'false'}
-          {...register('city', {
-            required:
-              'Input the city name of where you want to see the current weather.',
-            maxLength: { value: 50, message: 'Max 50 characters.' },
-            pattern: {
-              value: /^[A-Öa-ö ]+$/i,
-              message: 'Only latin letters are accepted.',
-            },
-          })}
+        <WeatherInfo
+          city={weather.city}
+          icon={weather.icon}
+          temp={weather.temp}
         />
-        {errors.city && <p role="alert">{errors.city.message}</p>}
-        {apiError && <p>Sorry, the city could not be found.</p>}
-        <input className={styles.Button} type="submit" value="Get Weather" />
-      </form>
+      )}
+      <WeatherForm onSubmit={onSubmit} />
+      {apiError && <p>Sorry, the city could not be found.</p>}
     </div>
   );
 };
