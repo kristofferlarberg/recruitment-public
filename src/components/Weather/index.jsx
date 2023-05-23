@@ -9,7 +9,7 @@ import styles from './Weather.module.css';
 // 4. make fetch from API with form input x
 // 5. validate input x
 // 6. add icon x
-// 7. adjust styling
+// 7. adjust styling x
 
 const Weather = () => {
   const [weather, setWeather] = useState('');
@@ -47,19 +47,38 @@ const Weather = () => {
   const onSubmit = (input) => setCity(input.city);
 
   return (
-    <div>
-      <h2>How's the weather out there?</h2>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100vw',
+      }}
+    >
+      <h2 style={{ marginBottom: '2rem' }}>How's the weather out there?</h2>
       {weather && (
-        <>
-          <h3>{weather.city}</h3>
+        <div
+          style={{
+            backgroundColor: 'darkcyan',
+            marginTop: '1rem',
+            marginBottom: '1rem',
+            padding: '1rem 1rem 1.5rem',
+            borderRadius: '20px',
+            maxWidth: '20rem',
+            minWidth: '15rem',
+          }}
+        >
+          <h3 style={{ margin: '0 0 0.5rem 0', color: 'white' }}>
+            {weather.city}
+          </h3>
           <img
             src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
             style={{ width: '50px' }}
           />
-          <p>{weather.temp} °C</p>
-        </>
+          <p style={{ color: 'white', margin: '0' }}>{weather.temp} °C</p>
+        </div>
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: '1.5rem' }}>
         <label htmlFor="city" className={styles.srOnly}>
           City
         </label>
