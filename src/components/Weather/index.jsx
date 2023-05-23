@@ -13,7 +13,6 @@ import styles from './Weather.module.css';
 
 const Weather = () => {
   const [weather, setWeather] = useState('');
-  const [city, setCity] = useState('');
   const [apiError, setApiError] = useState(false);
   const {
     register,
@@ -23,28 +22,23 @@ const Weather = () => {
 
   const token = import.meta.env.VITE_API_TOKEN;
 
-  useEffect(() => {
-    const weatherData = async () => {
-      if (city) {
-        try {
-          const response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${token}&units=metric`
-          );
-          const data = await response.json();
-          setWeather({
-            city: data.name,
-            temp: data.main.temp,
-            icon: data.weather[0].icon,
-          });
-        } catch {
-          setApiError(true);
-        }
-      }
-    };
-    weatherData();
-  }, [city]);
+  const weatherData = async (city) => {
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${token}&units=metric`
+      );
+      const data = await response.json();
+      setWeather({
+        city: data.name,
+        temp: data.main.temp,
+        icon: data.weather[0].icon,
+      });
+    } catch {
+      setApiError(true);
+    }
+  };
 
-  const onSubmit = (input) => setCity(input.city);
+  const onSubmit = (input) => weatherData(input.city);
 
   return (
     <div
