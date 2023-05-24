@@ -86,6 +86,8 @@ const Weather = () => {
 
   const token = import.meta.env.VITE_API_TOKEN;
 
+  const query = new URLSearchParams(window.location.search).get('query');
+
   const weatherData = async (city) => {
     try {
       const response = await fetch(
@@ -102,6 +104,10 @@ const Weather = () => {
       setApiError(true);
     }
   };
+
+  useEffect(() => {
+    weatherData(query);
+  }, []);
 
   const onSubmit = (input) => weatherData(input.city);
 
